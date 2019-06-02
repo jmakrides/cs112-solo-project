@@ -109,11 +109,11 @@ public class FactorySystem {
         System.out.println("Enter the number corresponding to your choice");
         System.out.println("> ");
 
-        while (componentType == null)
-        {
-            reader = new Scanner(System.in);
-            String input = reader.nextLine();
+        reader = new Scanner(System.in);
+        String input = reader.nextLine();
 
+        while (componentType.equals(""))
+        {
             if(input.equals("1")) {
                 componentType = "Winglet Strut";
             }
@@ -137,7 +137,7 @@ public class FactorySystem {
             System.out.println("Please select your aircraft type: 1. Airbus A320 or 2. Airbus A380");
             System.out.println("> ");
 
-            while (sizeFitmentType == null) {
+            while (sizeFitmentType.equals("")) {
                 reader = new Scanner(System.in);
                 String input = reader.nextLine();
 
@@ -156,7 +156,7 @@ public class FactorySystem {
             System.out.println("Please select your size: 1. '10mm diameter x 75mm length', 2. '12mm diameter x 100mm length', or 3. '16mm diameter x 150mm length'");
             System.out.println("> ");
 
-            while (sizeFitmentType == null) {
+            while (sizeFitmentType.equals("")) {
                 reader = new Scanner(System.in);
                 String input = reader.nextLine();
 
@@ -190,8 +190,12 @@ public class FactorySystem {
             System.out.println("Batch and component records created at " + time + " on " + date);
 
             createBatch();
+            printMenu();
         }
         if (input.equals("N")) {
+            noOfComponents = 0;
+            componentType = "";
+            sizeFitmentType = "";
             retryBatchDetails();
         }
         else {
