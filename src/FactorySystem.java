@@ -31,24 +31,25 @@ public class FactorySystem {
         System.out.println("2. Quit");
         System.out.println("> ");
 
-        reader = new Scanner(System.in);
-        String input = reader.nextLine();
+        do {
+            reader = new Scanner(System.in);
+            int input = reader.nextInt();
 
-        if(!finished) {
-            if(input.equals("1")) {
-                getBatchDetails();
-            }
-            if(input.equals("2")) {
-                quit();
-            }
-            else {
-                System.out.println("Please choose a valid option");
+            switch (input) {
+                case 1:
+                    getBatchDetails();
+                    break;
+                case 2:
+                    quit();
+                    break;
+                default:
+                    System.out.println("Please choose a valid option");
             }
         }
+        while (!finished);
     }
 
     private void getBatchDetails() {
-
         generateBatchNo();
         System.out.println(batchNumber);
 
@@ -71,7 +72,7 @@ public class FactorySystem {
 
         selectComponentType();
 
-        if(componentType.equals("Rudder Pin")|| componentType.equals("Winglet Strut"));
+        if(componentType.equals("Rudder Pin")|| componentType.equals("Winglet Strut"))
         {
             selectSizeFitmentType();
         }
@@ -82,16 +83,14 @@ public class FactorySystem {
     private void generateBatchNo() {
         String dateString = getCurrentDateShortenedYear();
 
-        String batchNo = dateString + "0001";
-
-        batchNumber = batchNo;
+        batchNumber = dateString + "0001";
     }
 
     private void selectNoComponents() {
         System.out.println("How many components do you want to manufacture (1 to 9999)?");
         System.out.println("> ");
 
-        while (noOfComponents == 0) {
+        do {
             reader = new Scanner(System.in);
             int input = reader.nextInt();
 
@@ -100,7 +99,7 @@ public class FactorySystem {
             } else {
                 System.out.println("Please enter a number within the range 1 to 9999");
             }
-        }
+        } while (noOfComponents == 0);
 
     }
 
@@ -109,129 +108,149 @@ public class FactorySystem {
         System.out.println("Enter the number corresponding to your choice");
         System.out.println("> ");
 
-        reader = new Scanner(System.in);
-        String input = reader.nextLine();
+        do {
+            reader = new Scanner(System.in);
+            int input = reader.nextInt();
 
-        while (componentType.equals(""))
-        {
-            if(input.equals("1")) {
-                componentType = "Winglet Strut";
-            }
-            if(input.equals("2")) {
-                componentType = "Door Handle";
-            }
-            if(input.equals("3")) {
-                componentType = "Rudder Pin";
-            }
-            else {
-                System.out.println("Please enter a valid choice between 1 and 3");
+            switch (input) {
+                case 1:
+                    componentType = "Winglet Strut";
+                    break;
+                case 2:
+                    componentType = "Door Handle";
+                    break;
+                case 3:
+                    componentType = "Rudder Pin";
+                    break;
+                default:
+                    System.out.println("Please enter a valid choice between 1 and 3");
+                    break;
             }
         }
+        while (componentType.equals(""));
 
     }
 
     private void selectSizeFitmentType() {
-
-
         if(componentType.equals("Winglet Strut")) {
             System.out.println("Please select your aircraft type: 1. Airbus A320 or 2. Airbus A380");
             System.out.println("> ");
 
-            while (sizeFitmentType.equals("")) {
+            do {
                 reader = new Scanner(System.in);
-                String input = reader.nextLine();
+                int input = reader.nextInt();
 
-                if (input.equals("1")) {
-                    sizeFitmentType = "Airbus A320";
-                }
-                if (input.equals("2")) {
-                    sizeFitmentType = "Airbus A380";
-                } else {
-                    System.out.println("Please enter a valid choice between 1 and 2");
+                switch (input) {
+                    case 1:
+                        sizeFitmentType = "Airbus A320";
+                        break;
+                    case 2:
+                        sizeFitmentType = "Airbus A380";
+                        break;
+                    default:
+                        System.out.println("Please enter a valid choice between 1 and 2");
+                        break;
                 }
             }
-
+            while (sizeFitmentType.equals(""));
         }
-        if(componentType.equals("Rudder Pin")) {
+        else {
             System.out.println("Please select your size: 1. '10mm diameter x 75mm length', 2. '12mm diameter x 100mm length', or 3. '16mm diameter x 150mm length'");
             System.out.println("> ");
 
-            while (sizeFitmentType.equals("")) {
+            do {
                 reader = new Scanner(System.in);
-                String input = reader.nextLine();
+                int input = reader.nextInt();
 
-                if (input.equals("1")) {
-                    sizeFitmentType = "10mm diameter x 75mm length";
-                }
-                if (input.equals("2")) {
-                    sizeFitmentType = "12mm diameter x 100mm length";
-                }
-                if (input.equals("3")) {
-                    sizeFitmentType = "16mm diameter x 150mm length";
-                }
-                else {
-                    System.out.println("Please enter a valid choice between 1 and 3");
+                switch (input) {
+                    case 1:
+                        sizeFitmentType = "10mm diameter x 75mm length";
+                        break;
+                    case 2:
+                        sizeFitmentType = "12mm diameter x 100mm length";
+                        break;
+                    case 3:
+                        sizeFitmentType = "16mm diameter x 150mm length";
+                        break;
+                    default:
+                        System.out.println("Please enter a valid choice between 1 and 3");
+                        break;
                 }
             }
-
+            while (sizeFitmentType.equals(""));
         }
     }
 
     private void confirmBatchDetails() {
-        System.out.println("This batch contains " + noOfComponents + " " + sizeFitmentType + " " + componentType + " is this correct? Y/N");
-
-        reader = new Scanner(System.in);
-        String input = reader.nextLine();
-
-        if (input.equals("Y")) {
-            String date = getCurrentDateFullYear();
-            String time = getCurrentTime();
-
-            System.out.println("Batch and component records created at " + time + " on " + date);
-
-            createBatch();
-            printMenu();
+        boolean decisionMade = false;
+        if (noOfComponents > 1) {
+            System.out.println("This batch contains " + noOfComponents + " " + sizeFitmentType + " " + componentType + "s is this correct? Y/N");
+        } else {
+            System.out.println("This batch contains " + noOfComponents + " " + sizeFitmentType + " " + componentType + " is this correct? Y/N");
         }
-        if (input.equals("N")) {
-            noOfComponents = 0;
-            componentType = "";
-            sizeFitmentType = "";
-            retryBatchDetails();
-        }
-        else {
-            System.out.println("Please enter a valid: 'Y' or 'N'");
-        }
+
+
+        do {
+            reader = new Scanner(System.in);
+            String input = reader.nextLine();
+
+            switch (input) {
+                case "Y":
+                    String date = getCurrentDateFullYear();
+                    String time = getCurrentTime();
+
+                    System.out.println("Batch and component records created at " + time + " on " + date);
+
+                    createBatch();
+
+                    noOfComponents = 0;
+                    componentType = "";
+                    sizeFitmentType = "";
+
+                    decisionMade = true;
+                    printMenu();
+                    break;
+
+                case "N":
+                    noOfComponents = 0;
+                    componentType = "";
+                    sizeFitmentType = "";
+                    retryBatchDetails();
+                    break;
+
+                default:
+                    System.out.println("Please enter a valid: 'Y' or 'N'");
+                    break;
+            }
+        } while (!decisionMade);
+
     }
 
     private Batch createBatch() {
-        Batch batch = new Batch(batchNumber, noOfComponents, componentType, sizeFitmentType);
-
-        return batch;
+        return new Batch(batchNumber, noOfComponents, componentType, sizeFitmentType);
     }
 
     private String getCurrentDateFullYear() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("ddMMyyyy");
         LocalDate date = LocalDate.now();
-        String dateString = dtf.format(date);
-        return dateString;
+        return dtf.format(date);
     }
 
     private String getCurrentDateShortenedYear() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("ddMMyy");
         LocalDate date = LocalDate.now();
-        String dateString = dtf.format(date);
-        return dateString;
+        return dtf.format(date);
     }
 
     private String getCurrentTime() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HHmm");
         LocalDateTime date = LocalDateTime.now();
-        String timeString = dtf.format(date);
-        return timeString;
+        return dtf.format(date);
     }
 
     private void quit() {
         finished = true;
         System.out.println("System Exited");
+        System.exit(0);
     }
 }
