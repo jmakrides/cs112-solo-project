@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +17,7 @@ public class FactorySystem {
 
     }
 
-    public void start() {
+    public void start() throws IOException {
         printWelcome();
         printMenu();
     }
@@ -25,7 +26,7 @@ public class FactorySystem {
         System.out.println("Welcome to the GPEC inventory system.");
     }
 
-    private void printMenu() {
+    private void printMenu() throws IOException {
         System.out.println("Please choose one of the following options:");
         System.out.println("1. Create a new batch");
         System.out.println("2. Quit");
@@ -49,7 +50,7 @@ public class FactorySystem {
         while (!finished);
     }
 
-    private void getBatchDetails() {
+    private void getBatchDetails() throws IOException {
         generateBatchNo();
         System.out.println(batchNumber);
 
@@ -65,7 +66,7 @@ public class FactorySystem {
         confirmBatchDetails();
     }
 
-    private void retryBatchDetails() {
+    private void retryBatchDetails() throws IOException {
         System.out.println(batchNumber);
 
         selectNoComponents();
@@ -181,7 +182,7 @@ public class FactorySystem {
         }
     }
 
-    private void confirmBatchDetails() {
+    private void confirmBatchDetails() throws IOException {
         boolean decisionMade = false;
         if (noOfComponents > 1) {
             System.out.println("This batch contains " + noOfComponents + " " + sizeFitmentType + " " + componentType + "s is this correct? Y/N");
@@ -226,7 +227,8 @@ public class FactorySystem {
 
     }
 
-    private Batch createBatch() {
+    private Batch createBatch() throws IOException {
+        WriteToFIle.writeBatchNumberToFile(batchNumber);
         return new Batch(batchNumber, noOfComponents, componentType, sizeFitmentType);
     }
 
