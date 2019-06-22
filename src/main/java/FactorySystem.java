@@ -18,6 +18,7 @@ public class FactorySystem {
     }
 
     public void start() throws IOException {
+        WriteToFile.createBatchNumberFile();
         printWelcome();
         printMenu();
     }
@@ -228,7 +229,7 @@ public class FactorySystem {
     }
 
     private Batch createBatch() throws IOException {
-        WriteToFIle.writeBatchNumberToFile(batchNumber);
+        WriteToFile.writeBatchNumberToFile(batchNumber);
         return new Batch(batchNumber, noOfComponents, componentType, sizeFitmentType);
     }
 
