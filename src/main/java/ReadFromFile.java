@@ -32,8 +32,4 @@ public class ReadFromFile {
 
         return batchNumberList;
     }
-
-    public static JSONArray readBatchNumbersForGivenDay() {
-
-    }
 }

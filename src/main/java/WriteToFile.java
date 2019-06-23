@@ -45,7 +45,6 @@ public class WriteToFile {
 
         JSONArray batchNumberList = ReadFromFile.readBatchNumbers();
 
-        JSONArray batchNumberListForGivenDate = new JSONArray();
         batchNumberList.add(batchNo);
         batchNumbers.put("batchNumbers", batchNumberList);
 
