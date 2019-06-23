@@ -7,14 +7,14 @@ public class Batch {
     private int noOfComponents;
     private String componentType;
     private String sizeModel;
-    //private List<Component> componentList;
+    private List<Component> componentList;
 
-    public Batch(String batchNo, int noOfComponents, String componentType, String sizeModel/*, List<Component> componentList*/) {
+    public Batch(String batchNo, int noOfComponents, String componentType, String sizeModel, List<Component> componentList) {
         this.batchNo = batchNo;
         this.noOfComponents = noOfComponents;
         this.componentType = componentType;
         this.sizeModel = sizeModel;
-        //this.componentList = componentList;
+        this.componentList = componentList;
     }
 
     public String getBatchNo() {
@@ -49,13 +49,13 @@ public class Batch {
         this.sizeModel = sizeModel;
     }
 
-//    public List<Component> getComponentList() {
-//        return componentList;
-//    }
-//
-//    public void setComponentList(List<Component> componentList) {
-//        this.componentList = componentList;
-//    }
+    public List<Component> getComponentList() {
+        return componentList;
+    }
+
+    public void setComponentList(List<Component> componentList) {
+        this.componentList = componentList;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -65,14 +65,14 @@ public class Batch {
         return noOfComponents == batch.noOfComponents &&
                 Objects.equals(batchNo, batch.batchNo) &&
                 Objects.equals(componentType, batch.componentType) &&
-                Objects.equals(sizeModel, batch.sizeModel); /*&&
-                Objects.equals(componentList, batch.componentList);*/
+                Objects.equals(sizeModel, batch.sizeModel) &&
+                Objects.equals(componentList, batch.componentList);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(batchNo, noOfComponents, componentType, sizeModel/*, componentList*/);
+        return Objects.hash(batchNo, noOfComponents, componentType, sizeModel, componentList);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class Batch {
                 ", noOfComponents=" + noOfComponents +
                 ", componentType='" + componentType + '\'' +
                 ", sizeModel='" + sizeModel + '\'' +
-                //*", componentList=" + componentList +
+                ", componentList=" + componentList +
                 '}';
     }
 }

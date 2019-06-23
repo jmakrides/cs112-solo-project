@@ -1,9 +1,11 @@
 import org.json.simple.JSONArray;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FactorySystem {
@@ -14,6 +16,7 @@ public class FactorySystem {
     private int noOfComponents = 0;
     private String componentType = "";
     private String sizeFitmentType = "";
+    private ArrayList<String> componentSerialNumbers = new ArrayList<>();
 
     public FactorySystem() {
 
@@ -86,12 +89,21 @@ public class FactorySystem {
 
     private void generateBatchNo() {
 
-        JSONArray batchNumbers = ReadFromFile.readBatchNumbers();
-
-
         String dateString = getCurrentDateShortenedYear();
 
-        batchNumber = dateString + "0001";
+        JSONArray batchNumbers = ReadFromFile.readBatchNumbers();
+
+        if (!batchNumbers.isEmpty()) {
+            String latestBatchNumber = batchNumbers.get(batchNumbers.size()-1).toString();
+            String latestBatchNumberDate = latestBatchNumber.substring(0,6);
+            if(latestBatchNumberDate.equals(dateString)) {
+                Long latestBatchNumberAsLong = Long.parseLong(latestBatchNumber);
+                Long newBatchNumber = latestBatchNumberAsLong + 1;
+                batchNumber = newBatchNumber.toString();
+            }
+        } else {
+            batchNumber = dateString + "0001";
+        }
     }
 
     private void selectNoComponents() {
@@ -214,6 +226,7 @@ public class FactorySystem {
                     noOfComponents = 0;
                     componentType = "";
                     sizeFitmentType = "";
+                    componentSerialNumbers.clear();
 
                     decisionMade = true;
                     printMenu();
@@ -234,10 +247,28 @@ public class FactorySystem {
 
     }
 
+    private ArrayList<Component> createComponentList() {
+        DecimalFormat decimalFormat = new DecimalFormat("0000");
+        ArrayList<Component> componentList = new ArrayList<>();
+        int count = noOfComponents;
+        for (int i = 0; i < count; i++) {
+            String componentSerialNumberEnding = decimalFormat.format(0001 + i);
+            String componentSerialNumber = batchNumber + "-" + componentSerialNumberEnding;
+            Component component = new Component(batchNumber, componentSerialNumber, componentType, sizeFitmentType);
+            componentList.add(component);
+            componentSerialNumbers.add(componentSerialNumber);
+        }
+        return componentList;
+    }
+
     private Batch createBatch() throws IOException {
         WriteToFile.writeBatchNumberToFile(batchNumber);
-        return new Batch(batchNumber, noOfComponents, componentType, sizeFitmentType);
+        ArrayList<Component> componentList = createComponentList();
+        WriteToFile.writeBatchToFile(batchNumber, noOfComponents, componentType, sizeFitmentType, componentSerialNumbers);
+        return new Batch(batchNumber, noOfComponents, componentType, sizeFitmentType, componentList);
     }
+
+
 
     private String getCurrentDateFullYear() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("ddMMyyyy");
