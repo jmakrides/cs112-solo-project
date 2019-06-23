@@ -10,7 +10,8 @@ import java.io.Reader;
 
 public class ReadFromFile {
 
-    public void readBatchNumbers() {
+    public static JSONArray readBatchNumbers() {
+        JSONArray batchNumberList = new JSONArray();
 
         JSONParser parser = new JSONParser();
 
@@ -18,7 +19,8 @@ public class ReadFromFile {
 
             JSONObject batchNumbers = (JSONObject) parser.parse(reader);
 
-            JSONArray batchNumberList = (JSONArray) batchNumbers.get("batchNumbers");
+            batchNumberList = (JSONArray) batchNumbers.get("batchNumbers");
+
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -27,5 +29,11 @@ public class ReadFromFile {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        return batchNumberList;
+    }
+
+    public static JSONArray readBatchNumbersForGivenDay() {
+
     }
 }

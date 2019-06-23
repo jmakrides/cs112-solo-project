@@ -1,3 +1,5 @@
+import org.json.simple.JSONArray;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -83,6 +85,10 @@ public class FactorySystem {
     }
 
     private void generateBatchNo() {
+
+        JSONArray batchNumbers = ReadFromFile.readBatchNumbers();
+
+
         String dateString = getCurrentDateShortenedYear();
 
         batchNumber = dateString + "0001";

@@ -17,12 +17,35 @@ public class WriteToFile {
         File batchnumbers = new File("files/batchnumbers/batchnumbers.txt");
 
         batchnumbers.createNewFile();
+
+        addBatchNumberArrayToFileIfEmpty();
+    }
+
+    public static void addBatchNumberArrayToFileIfEmpty() {
+
+        File batchNumberFile = new File("files/batchnumbers/batchnumbers.txt");
+
+        if(batchNumberFile.length() == 0) {
+            JSONObject batchNumbers = new JSONObject();
+
+            JSONArray batchNumberList = new JSONArray();
+
+            batchNumbers.put("batchNumbers", batchNumberList);
+
+            try (FileWriter file = new FileWriter("files/batchnumbers/batchnumbers.txt")) {
+                file.write((batchNumbers.toJSONString()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void writeBatchNumberToFile(String batchNo) throws IOException {
         JSONObject batchNumbers = new JSONObject();
 
-        JSONArray batchNumberList = new JSONArray();
+        JSONArray batchNumberList = ReadFromFile.readBatchNumbers();
+
+        JSONArray batchNumberListForGivenDate = new JSONArray();
         batchNumberList.add(batchNo);
         batchNumbers.put("batchNumbers", batchNumberList);
 
@@ -31,16 +54,5 @@ public class WriteToFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        try (FileWriter file = new FileWriter("files/batchnumbers/batchnumbers.txt")) {
-//            file.write(batch.toJSONString());
-//        }
-
-//        try {
-//            final Path path = Paths.get("files/batchnumbers/batchnumbers.txt");
-//            Files.write(path, Arrays.asList(batchNumber), StandardCharsets.UTF_8,
-//                    Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
-//        } catch (final IOException ioe) {
-//            // Add your own exception handling...
-//        }
     }
 }
