@@ -15,7 +15,7 @@ public class ReadFromFile {
 
         JSONParser parser = new JSONParser();
 
-        try (Reader reader = new FileReader("files/batchnumbers/batchnumbers.txt")) {
+        try (Reader reader = new FileReader("files/batchnumbers/batchnumbers.json")) {
 
             JSONObject batchNumbers = (JSONObject) parser.parse(reader);
 
