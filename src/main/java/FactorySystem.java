@@ -17,6 +17,7 @@ public class FactorySystem {
     private String componentType = "";
     private String sizeFitmentType = "";
     private ArrayList<String> componentSerialNumbers = new ArrayList<>();
+    private ArrayList<String> componentStatusList = new ArrayList<>();
 
     public FactorySystem() {
 
@@ -70,7 +71,10 @@ public class FactorySystem {
         }
 
         confirmBatchDetails();
+
+        printDetails();
     }
+
 
     private void retryBatchDetails() throws IOException {
         System.out.println(batchNumber);
@@ -85,6 +89,8 @@ public class FactorySystem {
         }
 
         confirmBatchDetails();
+
+        printDetails();
     }
 
     private void generateBatchNo() {
@@ -100,6 +106,8 @@ public class FactorySystem {
                 Long latestBatchNumberAsLong = Long.parseLong(latestBatchNumber);
                 Long newBatchNumber = latestBatchNumberAsLong + 1;
                 batchNumber = newBatchNumber.toString();
+            } else {
+                batchNumber = dateString + "0001";
             }
         } else {
             batchNumber = dateString + "0001";
@@ -222,11 +230,13 @@ public class FactorySystem {
                     System.out.println("Batch and component records created at " + time + " on " + date);
 
                     createBatch();
+                    printDetails();
 
                     noOfComponents = 0;
                     componentType = "";
                     sizeFitmentType = "";
                     componentSerialNumbers.clear();
+                    componentStatusList.clear();
 
                     decisionMade = true;
                     printMenu();
@@ -236,6 +246,8 @@ public class FactorySystem {
                     noOfComponents = 0;
                     componentType = "";
                     sizeFitmentType = "";
+                    componentSerialNumbers.clear();
+                    componentStatusList.clear();
                     retryBatchDetails();
                     break;
 
@@ -247,7 +259,33 @@ public class FactorySystem {
 
     }
 
-    private ArrayList<Component> createComponentList() {
+    private void printDetails() {
+        reader = new Scanner(System.in);
+        String input = reader.nextLine();
+
+        switch (input) {
+            case "Y":
+                System.out.println("Batch Number: " + batchNumber);
+                String manufactureDate = getCurrentDateFullYear();
+                System.out.println("Manufacture Date: " + manufactureDate);
+                System.out.println("Component Type: " + componentType);
+                System.out.println("Component Size/Fitment Type: " + sizeFitmentType);
+                System.out.println("Number of Components in Batch: " + noOfComponents);
+                System.out.println("Serial Numbers: " + componentSerialNumbers);
+                System.out.println("Component Status: " + componentStatusList);
+                break;
+
+            case "N":
+                break;
+
+            default:
+                System.out.println("Please enter a valid: 'Y' or 'N'");
+                break;
+        }
+    }
+
+
+    private ArrayList<Component> createComponentList() throws IOException {
         DecimalFormat decimalFormat = new DecimalFormat("0000");
         ArrayList<Component> componentList = new ArrayList<>();
         int count = noOfComponents;
@@ -257,6 +295,9 @@ public class FactorySystem {
             Component component = new Component(batchNumber, componentSerialNumber, componentType, sizeFitmentType);
             componentList.add(component);
             componentSerialNumbers.add(componentSerialNumber);
+            String componentStatus = "Manufactured-unfinished";
+            componentStatusList.add(componentSerialNumber + " Manufactured-unfinished");
+            WriteToFile.writeComponentToFile(componentSerialNumber, batchNumber, componentType, sizeFitmentType, getCurrentDateShortenedYear(), componentStatus);
         }
         return componentList;
     }
@@ -264,7 +305,8 @@ public class FactorySystem {
     private Batch createBatch() throws IOException {
         WriteToFile.writeBatchNumberToFile(batchNumber);
         ArrayList<Component> componentList = createComponentList();
-        WriteToFile.writeBatchToFile(batchNumber, noOfComponents, componentType, sizeFitmentType, componentSerialNumbers);
+        String manufactureDate = getCurrentDateFullYear();
+        WriteToFile.writeBatchToFile(batchNumber, manufactureDate, noOfComponents, componentType, sizeFitmentType, componentSerialNumbers, componentStatusList);
         return new Batch(batchNumber, noOfComponents, componentType, sizeFitmentType, componentList);
     }
 

@@ -56,20 +56,42 @@ public class WriteToFile {
         }
     }
 
-    public static void writeBatchToFile(String batchNumber, int noOfComponents, String componentType, String sizeFitmentType, ArrayList<String> componentSerialNumbers) throws IOException {
-        File batchnumbers = new File("files/batches/" + batchNumber + ".json");
+    public static void writeBatchToFile(String batchNumber, String manufactureDate, int noOfComponents, String componentType, String sizeFitmentType, ArrayList<String> componentSerialNumbers, ArrayList<String> componentStatus) throws IOException {
+        File batches = new File("files/batches/" + batchNumber + ".json");
 
-        batchnumbers.createNewFile();
+        batches.createNewFile();
 
         JSONObject batch = new JSONObject();
         batch.put("batchNumber", batchNumber);
-        batch.put("noOfComponents", noOfComponents);
+        batch.put("manufactureDate", manufactureDate);
         batch.put("componentType", componentType);
         batch.put("sizeFitmentType", sizeFitmentType);
+        batch.put("noOfComponents", noOfComponents);
         batch.put("componentSerialNumbers", componentSerialNumbers);
+        batch.put("componentStatus", componentStatus);
 
-        try (FileWriter file = new FileWriter(batchnumbers)) {
+        try (FileWriter file = new FileWriter(batches)) {
             file.write((batch.toJSONString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeComponentToFile (String serialNumber, String batchNumber, String componentType, String sizeFitmentType, String manufactureDate, String componentStatus) throws IOException {
+        File components = new File("files/components/" + serialNumber + ".json");
+
+        components.createNewFile();
+
+        JSONObject component = new JSONObject();
+        component.put("serialNumber", serialNumber);
+        component.put("batchNumber", batchNumber);
+        component.put("manufactureDate", manufactureDate);
+        component.put("componentType", componentType);
+        component.put("sizeFitmentType", sizeFitmentType);
+        component.put("componentStatus", componentStatus);
+
+        try (FileWriter file = new FileWriter(components)) {
+            file.write((component.toJSONString()));
         } catch (IOException e) {
             e.printStackTrace();
         }

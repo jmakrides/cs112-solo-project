@@ -1,0 +1,25 @@
+{
+  "componentType": "Winglet Strut",
+  "componentSerialNumbers": [
+    "2506190002-0001",
+    "2506190002-0002",
+    "2506190002-0003",
+    "2506190002-0004",
+    "2506190002-0005",
+    "2506190002-0006",
+    "2506190002-0007"
+  ],
+  "sizeFitmentType": "Airbus A320",
+  "manufactureDate": "25062019",
+  "noOfComponents": 7,
+  "componentStatus": [
+    "2506190002-0001 Manufactured-unfinished",
+    "2506190002-0002 Manufactured-unfinished",
+    "2506190002-0003 Manufactured-unfinished",
+    "2506190002-0004 Manufactured-unfinished",
+    "2506190002-0005 Manufactured-unfinished",
+    "2506190002-0006 Manufactured-unfinished",
+    "2506190002-0007 Manufactured-unfinished"
+  ],
+  "batchNumber": "2506190002"
+}
