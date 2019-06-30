@@ -22,6 +22,14 @@ public class WriteToFile {
         addBatchNumberArrayToFileIfEmpty();
     }
 
+    public static void createComponentNumberFile() throws IOException {
+        File componentnumbers = new File("files/componentnumbers/componentnumbers.json");
+
+        componentnumbers.createNewFile();
+
+        addComponentNumberArrayToFileIfEmpty();
+    }
+
     public static void addBatchNumberArrayToFileIfEmpty() {
 
         File batchNumberFile = new File("files/batchnumbers/batchnumbers.json");
@@ -41,6 +49,25 @@ public class WriteToFile {
         }
     }
 
+    public static void addComponentNumberArrayToFileIfEmpty() {
+
+        File componentNumberFile = new File("files/componentnumbers/componentnumbers.json");
+
+        if(componentNumberFile.length() == 0) {
+            JSONObject componentNumbers = new JSONObject();
+
+            JSONArray componentNumberList = new JSONArray();
+
+            componentNumbers.put("componentNumbers", componentNumberList);
+
+            try (FileWriter file = new FileWriter("files/componentnumbers/componentnumbers.json")) {
+                file.write((componentNumbers.toJSONString()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void writeBatchNumberToFile(String batchNo) throws IOException {
         JSONObject batchNumbers = new JSONObject();
 
@@ -51,6 +78,21 @@ public class WriteToFile {
 
         try (FileWriter file = new FileWriter("files/batchnumbers/batchnumbers.json")) {
             file.write((batchNumbers.toJSONString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeComponentNumberToFile(String batchNo) throws IOException {
+        JSONObject componentNumbers = new JSONObject();
+
+        JSONArray componentNumberList = ReadFromFile.readComponentNumbers();
+
+        componentNumberList.add(batchNo);
+        componentNumbers.put("componentNumbers", componentNumberList);
+
+        try (FileWriter file = new FileWriter("files/componentnumbers/componentnumbers.json")) {
+            file.write((componentNumbers.toJSONString()));
         } catch (IOException e) {
             e.printStackTrace();
         }
