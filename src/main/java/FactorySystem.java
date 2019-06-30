@@ -72,7 +72,7 @@ public class FactorySystem {
     }
 
     private void viewDetailsOfAComponent() {
-        
+
     }
 
     private void viewDetailsOfABatch() {
