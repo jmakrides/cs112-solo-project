@@ -56,7 +56,9 @@ public class WriteToFile {
         }
     }
 
-    public static void writeBatchToFile(String batchNumber, String manufactureDate, int noOfComponents, String componentType, String sizeFitmentType, ArrayList<String> componentSerialNumbers, ArrayList<String> componentStatus) throws IOException {
+    public static void writeBatchToFile(String batchNumber, String manufactureDate, int noOfComponents,
+                                        String componentType, String sizeFitmentType,
+                                        ArrayList<String> componentSerialNumbers, ArrayList<String> componentStatus) throws IOException {
         File batches = new File("files/batches/" + batchNumber + ".json");
 
         batches.createNewFile();
@@ -77,7 +79,8 @@ public class WriteToFile {
         }
     }
 
-    public static void writeComponentToFile (String serialNumber, String batchNumber, String componentType, String sizeFitmentType, String manufactureDate, String componentStatus) throws IOException {
+    public static void writeComponentToFile (String serialNumber, String batchNumber, String componentType,
+                                             String sizeFitmentType, String manufactureDate, String componentStatus) throws IOException {
         File components = new File("files/components/" + serialNumber + ".json");
 
         components.createNewFile();

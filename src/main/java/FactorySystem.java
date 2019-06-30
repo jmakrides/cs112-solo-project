@@ -12,6 +12,7 @@ public class FactorySystem {
 
     private Scanner reader;
     private boolean finished = false;
+    private Batch batch;
     private String batchNumber = "";
     private int noOfComponents = 0;
     private String componentType = "";
@@ -36,7 +37,11 @@ public class FactorySystem {
     private void printMenu() throws IOException {
         System.out.println("Please choose one of the following options:");
         System.out.println("1. Create a new batch");
-        System.out.println("2. Quit");
+        System.out.println("2. List all batches");
+        System.out.println("3. View details of a batch");
+        System.out.println("4. View details of a component");
+        System.out.println("5. Quit");
+
         System.out.println("> ");
 
         do {
@@ -48,6 +53,15 @@ public class FactorySystem {
                     getBatchDetails();
                     break;
                 case 2:
+                    listAllBatches();
+                    break;
+                case 3:
+                    viewDetailsOfABatch();
+                    break;
+                case 4:
+                    viewDetailsOfAComponent();
+                    break;
+                case 5:
                     quit();
                     break;
                 default:
@@ -55,6 +69,18 @@ public class FactorySystem {
             }
         }
         while (!finished);
+    }
+
+    private void viewDetailsOfAComponent() {
+        
+    }
+
+    private void viewDetailsOfABatch() {
+
+    }
+
+    private void listAllBatches() {
+
     }
 
     private void getBatchDetails() throws IOException {
@@ -183,7 +209,8 @@ public class FactorySystem {
             while (sizeFitmentType.equals(""));
         }
         else {
-            System.out.println("Please select your size: 1. '10mm diameter x 75mm length', 2. '12mm diameter x 100mm length', or 3. '16mm diameter x 150mm length'");
+            System.out.println("Please select your size: 1. '10mm diameter x 75mm length',"
+                    + "2. '12mm diameter x 100mm length', or 3. '16mm diameter x 150mm length'");
             System.out.println("> ");
 
             do {
@@ -212,9 +239,11 @@ public class FactorySystem {
     private void confirmBatchDetails() throws IOException {
         boolean decisionMade = false;
         if (noOfComponents > 1) {
-            System.out.println("This batch contains " + noOfComponents + " " + sizeFitmentType + " " + componentType + "s is this correct? Y/N");
+            System.out.println("This batch contains " + noOfComponents + " " + sizeFitmentType + " " + componentType +
+                    "s is this correct? Y/N");
         } else {
-            System.out.println("This batch contains " + noOfComponents + " " + sizeFitmentType + " " + componentType + " is this correct? Y/N");
+            System.out.println("This batch contains " + noOfComponents + " " + sizeFitmentType + " " + componentType +
+                    " is this correct? Y/N");
         }
 
 
@@ -260,28 +289,35 @@ public class FactorySystem {
     }
 
     private void printDetails() {
+        System.out.println("Print batch details? (Y/N)");
+        System.out.println("> ");
         reader = new Scanner(System.in);
         String input = reader.nextLine();
+        boolean done = false;
 
-        switch (input) {
-            case "Y":
-                System.out.println("Batch Number: " + batchNumber);
-                String manufactureDate = getCurrentDateFullYear();
-                System.out.println("Manufacture Date: " + manufactureDate);
-                System.out.println("Component Type: " + componentType);
-                System.out.println("Component Size/Fitment Type: " + sizeFitmentType);
-                System.out.println("Number of Components in Batch: " + noOfComponents);
-                System.out.println("Serial Numbers: " + componentSerialNumbers);
-                System.out.println("Component Status: " + componentStatusList);
-                break;
+        do {
+            switch (input) {
+                case "Y":
+                    System.out.println("Batch Number: " + batchNumber);
+                    String manufactureDate = getCurrentDateFullYear();
+                    System.out.println("Manufacture Date: " + manufactureDate);
+                    System.out.println("Component Type: " + componentType);
+                    System.out.println("Component Size/Fitment Type: " + sizeFitmentType);
+                    System.out.println("Number of Components in Batch: " + noOfComponents);
+                    System.out.println("Serial Numbers: " + componentSerialNumbers);
+                    System.out.println("Component Status: " + componentStatusList);
+                    done = true;
+                    break;
 
-            case "N":
-                break;
+                case "N":
+                    done = true;
+                    break;
 
-            default:
-                System.out.println("Please enter a valid: 'Y' or 'N'");
-                break;
-        }
+                default:
+                    System.out.println("Please enter a valid: 'Y' or 'N'");
+                    break;
+            }
+        } while (!done) ;
     }
 
 
@@ -297,17 +333,21 @@ public class FactorySystem {
             componentSerialNumbers.add(componentSerialNumber);
             String componentStatus = "Manufactured-unfinished";
             componentStatusList.add(componentSerialNumber + " Manufactured-unfinished");
-            WriteToFile.writeComponentToFile(componentSerialNumber, batchNumber, componentType, sizeFitmentType, getCurrentDateShortenedYear(), componentStatus);
+            WriteToFile.writeComponentToFile(componentSerialNumber, batchNumber, componentType, sizeFitmentType,
+                    getCurrentDateShortenedYear(), componentStatus);
         }
         return componentList;
     }
 
-    private Batch createBatch() throws IOException {
-        WriteToFile.writeBatchNumberToFile(batchNumber);
+    private void createBatch() throws IOException {
         ArrayList<Component> componentList = createComponentList();
         String manufactureDate = getCurrentDateFullYear();
-        WriteToFile.writeBatchToFile(batchNumber, manufactureDate, noOfComponents, componentType, sizeFitmentType, componentSerialNumbers, componentStatusList);
-        return new Batch(batchNumber, noOfComponents, componentType, sizeFitmentType, componentList);
+        batch = new Batch(batchNumber, noOfComponents, componentType, sizeFitmentType, componentList);
+
+        WriteToFile.writeBatchNumberToFile(batchNumber);
+        //TODO get batch number using getBatchNumber
+        WriteToFile.writeBatchToFile(batchNumber, manufactureDate, noOfComponents, componentType, sizeFitmentType,
+                componentSerialNumbers, componentStatusList);
     }
 
 
