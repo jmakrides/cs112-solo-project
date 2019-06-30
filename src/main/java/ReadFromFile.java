@@ -3,10 +3,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
+import java.util.ArrayList;
 
 public class ReadFromFile {
 
@@ -33,24 +31,25 @@ public class ReadFromFile {
         return batchNumberList;
     }
 
-    public static JSONArray readAllBatches() {
-        JSONArray batches = new JSONArray();
+    public static ArrayList<JSONObject> readAllBatches() {
+        ArrayList<JSONObject> batches = new ArrayList<>();
 
         JSONParser parser = new JSONParser();
 
-        try (Reader reader = new FileReader("files/batches")){
-
-
-            JSONObject batch = (JSONObject) parser.parse(reader);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        File folder = new File("files/batches");
+        for (File file : folder.listFiles()) {
+            try (Reader reader = new FileReader(file)) {
+                JSONObject batch = (JSONObject) parser.parse(reader);
+                batches.add(batch);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-        return  batches;
+        return batches;
     }
 
     public static JSONObject readDetailsOfABatch(String batchNumber) {

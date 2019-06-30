@@ -1,7 +1,6 @@
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -14,7 +13,6 @@ public class FactorySystem {
 
     private Scanner reader;
     private boolean finished = false;
-    private Batch batch;
     private String batchNumber = "";
     private int noOfComponents = 0;
     private String componentType = "";
@@ -74,98 +72,11 @@ public class FactorySystem {
         while (!finished);
     }
 
-    private void viewDetailsOfAComponent() throws IOException {
-        boolean decisionMade = false;
-        JSONArray componentNumbers = ReadFromFile.readComponentNumbers();
 
-        System.out.println("Enter component number:");
-        System.out.println("> ");
-
-        do {
-            reader = new Scanner(System.in);
-            String componentNumber = reader.nextLine();
-
-            if(componentNumbers.contains(componentNumber)) {
-                JSONObject component = ReadFromFile.readDetailsOfAComponent(componentNumber);
-
-                String componentType = (String) component.get("componentType");
-                String componentSizeType = (String) component.get("sizeFitmentType");
-                String manufactureDate = (String) component.get("manufactureDate");
-                String currentStatus = (String) component.get("componentStatus");
-                String batchForComponent = (String) component.get("batchNumber");
-
-                System.out.println("Component Details for " + componentNumber);
-                System.out.println("Type: " + componentType);
-                System.out.println("Size/Fit: " + componentSizeType);
-                System.out.println("Date of Manufacture: " + manufactureDate);
-                System.out.println("Current Status: " + currentStatus);
-                System.out.println("Part of Batch: " + batchForComponent);
-                System.out.println();
-                decisionMade = true;
-
-                printMenu();
-            }
-            else {
-                System.out.println("Invalid component number.");
-                printMenu();
-                decisionMade = true;
-            }
-
-        } while (!decisionMade);
-    }
-
-    private void viewDetailsOfABatch() throws IOException {
-        boolean decisionMade = false;
-        JSONArray batchNumbers = ReadFromFile.readBatchNumbers();
-
-        System.out.println("Enter batch number:");
-        System.out.println("> ");
-
-        do {
-            reader = new Scanner(System.in);
-            String batchNumber = reader.nextLine();
-
-            if(batchNumbers.contains(batchNumber)) {
-                JSONObject batch = ReadFromFile.readDetailsOfABatch(batchNumber);
-
-                String manufactureDate = (String) batch.get("manufactureDate");
-                String componentType = (String) batch.get("componentType");
-                String componentSizeType = (String) batch.get("sizeFitmentType");
-                Long numberOfComponents = (Long) batch.get("noOfComponents");
-                ArrayList<String> serialNumbers = (ArrayList<String>) batch.get("componentSerialNumbers");
-                ArrayList<String> componentStatus = (ArrayList<String>) batch.get("componentStatus");
-
-                System.out.println("Batch Number: " + batchNumber);
-                System.out.println("Manufacture Date: " + manufactureDate);
-                System.out.println("Component Type: " + componentType);
-                System.out.println("Component size/fitment type: " + componentSizeType);
-                System.out.println("Nuumber of Components in batch: " + numberOfComponents);
-                System.out.println("Serial Numbers " + serialNumbers);
-                System.out.println("Component Status: ");
-                for (String element : componentStatus) {
-                    System.out.println(element);
-                }
-                System.out.println();
-                decisionMade = true;
-
-                printMenu();
-            }
-            else {
-                System.out.println("Invalid batch number.");
-                printMenu();
-                decisionMade = true;
-            }
-
-        } while (!decisionMade);
-    }
-
-    private void listAllBatches() {
-        ReadFromFile.readAllBatches();
-    }
 
     private void getBatchDetails() throws IOException {
         generateBatchNo();
-        System.out.println(batchNumber);
+        System.out.println("Batch Number: " + batchNumber);
 
         selectNoComponents();
 
@@ -183,7 +94,7 @@ public class FactorySystem {
 
 
     private void retryBatchDetails() throws IOException {
-        System.out.println(batchNumber);
+        System.out.println("Batch Number: " + batchNumber);
 
         selectNoComponents();
 
@@ -209,9 +120,9 @@ public class FactorySystem {
             String latestBatchNumber = batchNumbers.get(batchNumbers.size()-1).toString();
             String latestBatchNumberDate = latestBatchNumber.substring(0,6);
             if(latestBatchNumberDate.equals(dateString)) {
-                Long latestBatchNumberAsLong = Long.parseLong(latestBatchNumber);
-                Long newBatchNumber = latestBatchNumberAsLong + 1;
-                batchNumber = newBatchNumber.toString();
+                long latestBatchNumberAsLong = Long.parseLong(latestBatchNumber);
+                long newBatchNumber = latestBatchNumberAsLong + 1;
+                batchNumber = Long.toString(newBatchNumber);
             } else {
                 batchNumber = dateString + "0001";
             }
@@ -371,11 +282,12 @@ public class FactorySystem {
     private void printDetails() {
         System.out.println("Print batch details? (Y/N)");
         System.out.println("> ");
-        reader = new Scanner(System.in);
-        String input = reader.nextLine();
+
         boolean done = false;
 
         do {
+            reader = new Scanner(System.in);
+            String input = reader.nextLine();
             switch (input) {
                 case "Y":
                     System.out.println("Batch Number: " + batchNumber);
@@ -423,7 +335,6 @@ public class FactorySystem {
     private void createBatch() throws IOException {
         ArrayList<Component> componentList = createComponentList();
         String manufactureDate = getCurrentDateFullYear();
-        batch = new Batch(batchNumber, noOfComponents, componentType, sizeFitmentType, componentList);
 
         WriteToFile.writeBatchNumberToFile(batchNumber);
         //TODO get batch number using getBatchNumber
@@ -431,7 +342,114 @@ public class FactorySystem {
                 componentSerialNumbers, componentStatusList);
     }
 
+    private void viewDetailsOfAComponent() throws IOException {
+        boolean decisionMade = false;
+        JSONArray componentNumbers = ReadFromFile.readComponentNumbers();
 
+        System.out.println("Enter component number:");
+        System.out.println("> ");
+
+        do {
+            reader = new Scanner(System.in);
+            String componentNumber = reader.nextLine();
+
+            if(componentNumbers.contains(componentNumber)) {
+                JSONObject component = ReadFromFile.readDetailsOfAComponent(componentNumber);
+
+                String componentType = (String) component.get("componentType");
+                String componentSizeType = (String) component.get("sizeFitmentType");
+                String manufactureDate = (String) component.get("manufactureDate");
+                String currentStatus = (String) component.get("componentStatus");
+                String batchForComponent = (String) component.get("batchNumber");
+
+                System.out.println("Component Details for " + componentNumber);
+                System.out.println("Type: " + componentType);
+                System.out.println("Size/Fit: " + componentSizeType);
+                System.out.println("Date of Manufacture: " + manufactureDate);
+                System.out.println("Current Status: " + currentStatus);
+                System.out.println("Part of Batch: " + batchForComponent);
+                System.out.println();
+                decisionMade = true;
+
+                printMenu();
+            }
+            else {
+                System.out.println("Invalid component number.");
+                printMenu();
+                decisionMade = true;
+            }
+
+        } while (!decisionMade);
+    }
+
+    private void viewDetailsOfABatch() throws IOException {
+        boolean decisionMade = false;
+        JSONArray batchNumbers = ReadFromFile.readBatchNumbers();
+
+        System.out.println("Enter batch number:");
+        System.out.println("> ");
+
+        do {
+            reader = new Scanner(System.in);
+            String batchNumber = reader.nextLine();
+
+            if(batchNumbers.contains(batchNumber)) {
+                JSONObject batch = ReadFromFile.readDetailsOfABatch(batchNumber);
+
+                String manufactureDate = (String) batch.get("manufactureDate");
+                String componentType = (String) batch.get("componentType");
+                String componentSizeType = (String) batch.get("sizeFitmentType");
+                Long numberOfComponents = (Long) batch.get("noOfComponents");
+                ArrayList<String> serialNumbers = (ArrayList<String>) batch.get("componentSerialNumbers");
+                ArrayList<String> componentStatus = (ArrayList<String>) batch.get("componentStatus");
+
+                System.out.println("Batch Number: " + batchNumber);
+                System.out.println("Manufacture Date: " + manufactureDate);
+                System.out.println("Component Type: " + componentType);
+                System.out.println("Component size/fitment type: " + componentSizeType);
+                System.out.println("Nuumber of Components in batch: " + numberOfComponents);
+                System.out.println("Serial Numbers " + serialNumbers);
+                System.out.println("Component Status: ");
+                for (String element : componentStatus) {
+                    System.out.println(element);
+                }
+                System.out.println();
+                decisionMade = true;
+
+                printMenu();
+            }
+            else {
+                System.out.println("Invalid batch number.");
+                printMenu();
+                decisionMade = true;
+            }
+
+        } while (!decisionMade);
+    }
+
+    private void listAllBatches() throws IOException {
+        ArrayList<JSONObject> batches = ReadFromFile.readAllBatches();
+
+        if (!batches.isEmpty()) {
+            for (JSONObject batch : batches) {
+                String batchNumber = (String) batch.get("batchNumber");
+                String type = (String) batch.get("componentType");
+                String sizeFitmentType = (String) batch.get("sizeFitmentType");
+                Long numberOfComponents = (Long) batch.get("noOfComponents");
+
+                System.out.println("Batch Number: " + batchNumber);
+                System.out.println("Type: " + type);
+                System.out.println("Size/Fit: " + sizeFitmentType);
+                System.out.println("Quantity Made: " + numberOfComponents);
+                System.out.println();
+                System.out.println();
+            }
+        }
+        else {
+            System.out.println("No batches to display");
+        }
+        printMenu();
+    }
 
     private String getCurrentDateFullYear() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("ddMMyyyy");
