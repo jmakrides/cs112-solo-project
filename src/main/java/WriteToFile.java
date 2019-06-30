@@ -99,7 +99,7 @@ public class WriteToFile {
     }
 
     public static void writeBatchToFile(String batchNumber, String manufactureDate, int noOfComponents,
-                                        String componentType, String sizeFitmentType,
+                                        String componentType, String sizeFitmentType, String location,
                                         ArrayList<String> componentSerialNumbers, ArrayList<String> componentStatus) throws IOException {
         File batches = new File("files/batches/" + batchNumber + ".json");
 
@@ -111,6 +111,7 @@ public class WriteToFile {
         batch.put("componentType", componentType);
         batch.put("sizeFitmentType", sizeFitmentType);
         batch.put("noOfComponents", noOfComponents);
+        batch.put("location", location);
         batch.put("componentSerialNumbers", componentSerialNumbers);
         batch.put("componentStatus", componentStatus);
 

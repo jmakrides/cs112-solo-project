@@ -17,6 +17,7 @@ public class FactorySystem {
     private int noOfComponents = 0;
     private String componentType = "";
     private String sizeFitmentType = "";
+    private String location = "";
     private ArrayList<String> componentSerialNumbers = new ArrayList<>();
     private ArrayList<String> componentStatusList = new ArrayList<>();
 
@@ -63,6 +64,9 @@ public class FactorySystem {
                     viewDetailsOfAComponent();
                     break;
                 case 5:
+                    allocateStock();
+                    break;
+                case 6:
                     quit();
                     break;
                 default:
@@ -72,10 +76,61 @@ public class FactorySystem {
         while (!finished);
     }
 
+    private void allocateStock() throws IOException {
+        String chosenLocation = "";
+        JSONArray batchNumbers = ReadFromFile.readBatchNumbers();
+
+        System.out.println("Enter batch number:");
+        System.out.println("> ");
+
+        reader = new Scanner(System.in);
+        String batchNumber = reader.nextLine();
+
+        if(batchNumbers.contains(batchNumber)) {
+            JSONObject batch = ReadFromFile.readDetailsOfABatch(batchNumber);
+            String location = (String) batch.get("location");
+
+            if(!location.equals("Factory Floor - Warehouse Not Allocated")) {
+                System.out.println("Select Warehouse (1. Glasgow, 2. Dubai)");
+                System.out.println("Enter the number corresponding to your choice");
+                System.out.println("> ");
+
+                do {
+                    reader = new Scanner(System.in);
+                    int input = reader.nextInt();
+
+                    switch (input) {
+                        case 1:
+                            chosenLocation = "Glasgow";
+                            break;
+                        case 2:
+                            chosenLocation = "Dubai";
+                            break;
+                        default:
+                            System.out.println("Please enter a valid choice, 1 or 2");
+                            break;
+                    }
+                }
+                while (chosenLocation.equals(""));
+
+
+
+            } else {
+                System.out.println("Batch already allocated.");
+                printMenu();
+            }
+        }
+        else {
+            System.out.println("Invalid batch number.");
+            printMenu();
+
+        }
+    }
 
 
     private void getBatchDetails() throws IOException {
         generateBatchNo();
+        location = "Factory Floor - Warehouse Not Allocated";
         System.out.println("Batch Number: " + batchNumber);
 
         selectNoComponents();
@@ -255,6 +310,7 @@ public class FactorySystem {
                     noOfComponents = 0;
                     componentType = "";
                     sizeFitmentType = "";
+                    location = "";
                     componentSerialNumbers.clear();
                     componentStatusList.clear();
 
@@ -296,6 +352,7 @@ public class FactorySystem {
                     System.out.println("Component Type: " + componentType);
                     System.out.println("Component Size/Fitment Type: " + sizeFitmentType);
                     System.out.println("Number of Components in Batch: " + noOfComponents);
+                    System.out.println("Location: " + location);
                     System.out.println("Serial Numbers: " + componentSerialNumbers);
                     System.out.println("Component Status: " + componentStatusList);
                     done = true;
@@ -338,7 +395,7 @@ public class FactorySystem {
 
         WriteToFile.writeBatchNumberToFile(batchNumber);
         //TODO get batch number using getBatchNumber
-        WriteToFile.writeBatchToFile(batchNumber, manufactureDate, noOfComponents, componentType, sizeFitmentType,
+        WriteToFile.writeBatchToFile(batchNumber, manufactureDate, noOfComponents, componentType, sizeFitmentType, location,
                 componentSerialNumbers, componentStatusList);
     }
 
@@ -396,6 +453,7 @@ public class FactorySystem {
             if(batchNumbers.contains(batchNumber)) {
                 JSONObject batch = ReadFromFile.readDetailsOfABatch(batchNumber);
 
+                String location = (String) batch.get("location");
                 String manufactureDate = (String) batch.get("manufactureDate");
                 String componentType = (String) batch.get("componentType");
                 String componentSizeType = (String) batch.get("sizeFitmentType");
@@ -404,6 +462,7 @@ public class FactorySystem {
                 ArrayList<String> componentStatus = (ArrayList<String>) batch.get("componentStatus");
 
                 System.out.println("Batch Number: " + batchNumber);
+                System.out.println("Location: " + location);
                 System.out.println("Manufacture Date: " + manufactureDate);
                 System.out.println("Component Type: " + componentType);
                 System.out.println("Component size/fitment type: " + componentSizeType);
@@ -436,11 +495,13 @@ public class FactorySystem {
                 String type = (String) batch.get("componentType");
                 String sizeFitmentType = (String) batch.get("sizeFitmentType");
                 Long numberOfComponents = (Long) batch.get("noOfComponents");
+                String location = (String) batch.get("location");
 
                 System.out.println("Batch Number: " + batchNumber);
                 System.out.println("Type: " + type);
                 System.out.println("Size/Fit: " + sizeFitmentType);
                 System.out.println("Quantity Made: " + numberOfComponents);
+                System.out.println("Location: " + location);
                 System.out.println();
                 System.out.println();
             }
