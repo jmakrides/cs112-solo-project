@@ -49,29 +49,29 @@ public class FactorySystem {
 
         do {
             reader = new Scanner(System.in);
-            int input = reader.nextInt();
+            String input = reader.nextLine();
 
             switch (input) {
-                case 1:
+                case "1":
                     getBatchDetails();
                     break;
-                case 2:
+                case "2":
                     listAllBatches();
                     break;
-                case 3:
+                case "3":
                     viewDetailsOfABatch();
                     break;
-                case 4:
+                case "4":
                     viewDetailsOfAComponent();
                     break;
-                case 5:
+                case "5":
                     allocateStock();
                     break;
-                case 6:
+                case "6":
                     quit();
                     break;
                 default:
-                    System.out.println("Please choose a valid option");
+                    System.out.println("Please choose a valid option, 1 - 6");
             }
         }
         while (!finished);
@@ -99,10 +99,10 @@ public class FactorySystem {
 
                 do {
                     reader = new Scanner(System.in);
-                    int input = reader.nextInt();
+                    String input = reader.nextLine();
 
                     switch (input) {
-                        case 1:
+                        case "1":
                             chosenLocation = "Glasgow";
                             WriteToFile.allocateStock(batchNumberToAllocate, chosenLocation);
                             System.out.println("This batch is now allocated and will be shipped to the Glasgow location.");
@@ -110,7 +110,7 @@ public class FactorySystem {
                             System.out.println();
                             printMenu();
                             break;
-                        case 2:
+                        case "2":
                             chosenLocation = "Dubai";
                             WriteToFile.allocateStock(batchNumberToAllocate, chosenLocation);
                             System.out.println("This batch is now allocated and will be shipped to the Dubai location.");
@@ -201,11 +201,15 @@ public class FactorySystem {
         System.out.println("> ");
 
         do {
+            int input = 0;
             reader = new Scanner(System.in);
-            int input = reader.nextInt();
-
-            if(input >=1 & input <=9999) {
-                noOfComponents = input;
+            if(reader.hasNextInt()) {
+                input = reader.nextInt();
+                if(input >=1 & input <=9999) {
+                    noOfComponents = input;
+                } else {
+                    System.out.println("Please enter a number within the range 1 to 9999");
+                }
             } else {
                 System.out.println("Please enter a number within the range 1 to 9999");
             }
@@ -220,16 +224,16 @@ public class FactorySystem {
 
         do {
             reader = new Scanner(System.in);
-            int input = reader.nextInt();
+            String input = reader.nextLine();
 
             switch (input) {
-                case 1:
+                case "1":
                     componentType = "Winglet Strut";
                     break;
-                case 2:
+                case "2":
                     componentType = "Door Handle";
                     break;
-                case 3:
+                case "3":
                     componentType = "Rudder Pin";
                     break;
                 default:
@@ -248,13 +252,13 @@ public class FactorySystem {
 
             do {
                 reader = new Scanner(System.in);
-                int input = reader.nextInt();
+                String input = reader.nextLine();
 
                 switch (input) {
-                    case 1:
+                    case "1":
                         sizeFitmentType = "Airbus A320";
                         break;
-                    case 2:
+                    case "2":
                         sizeFitmentType = "Airbus A380";
                         break;
                     default:
@@ -271,16 +275,16 @@ public class FactorySystem {
 
             do {
                 reader = new Scanner(System.in);
-                int input = reader.nextInt();
+                String input = reader.nextLine();
 
                 switch (input) {
-                    case 1:
+                    case "1":
                         sizeFitmentType = "10mm diameter x 75mm length";
                         break;
-                    case 2:
+                    case "2":
                         sizeFitmentType = "12mm diameter x 100mm length";
                         break;
-                    case 3:
+                    case "3":
                         sizeFitmentType = "16mm diameter x 150mm length";
                         break;
                     default:
