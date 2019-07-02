@@ -123,7 +123,7 @@ public class WriteToFile {
     }
 
     public static void writeComponentToFile (String serialNumber, String batchNumber, String componentType,
-                                             String sizeFitmentType, String manufactureDate, String componentStatus) throws IOException {
+                                             String sizeFitmentType, String manufactureDate, String componentStatus, String finish, String location) throws IOException {
         File components = new File("files/components/" + serialNumber + ".json");
 
         components.createNewFile();
@@ -135,6 +135,8 @@ public class WriteToFile {
         component.put("componentType", componentType);
         component.put("sizeFitmentType", sizeFitmentType);
         component.put("componentStatus", componentStatus);
+        component.put("finish", finish);
+        component.put("location", location);
 
         try (FileWriter file = new FileWriter(components)) {
             file.write((component.toJSONString()));

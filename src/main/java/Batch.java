@@ -9,6 +9,8 @@ public class Batch {
     private String sizeModel;
     private List<Component> componentList;
 
+    public Batch() {}
+
     public Batch(String batchNo, int noOfComponents, String componentType, String sizeModel, List<Component> componentList) {
         this.batchNo = batchNo;
         this.noOfComponents = noOfComponents;

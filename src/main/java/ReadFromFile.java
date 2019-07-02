@@ -52,6 +52,25 @@ public class ReadFromFile {
         return batches;
     }
 
+    public static ArrayList<JSONObject> readAllComponents() {
+        ArrayList<JSONObject> components = new ArrayList<>();
+
+        JSONParser parser = new JSONParser();
+
+        File folder = new File("files/components");
+        for (File file : folder.listFiles()) {
+            try (Reader reader = new FileReader(file)) {
+                JSONObject component = (JSONObject) parser.parse(reader);
+                components.add(component);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return components;
+    }
+
     public static JSONObject readDetailsOfABatch(String batchNumber) {
         JSONObject batch = new JSONObject();
 

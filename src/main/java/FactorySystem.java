@@ -43,7 +43,9 @@ public class FactorySystem {
         System.out.println("3. View details of a batch");
         System.out.println("4. View details of a component");
         System.out.println("5. Allocate manufactured stock");
-        System.out.println("6. Quit");
+        System.out.println("6. Search by product type");
+        System.out.println("7. Finish a component");
+        System.out.println("8. Quit");
 
         System.out.println("> ");
 
@@ -68,6 +70,11 @@ public class FactorySystem {
                     allocateStock();
                     break;
                 case "6":
+                    searchByProduct();
+                    break;
+                case "7":
+                    finishComponent();
+                case "8":
                     quit();
                     break;
                 default:
@@ -75,6 +82,84 @@ public class FactorySystem {
             }
         }
         while (!finished);
+    }
+
+    private void finishComponent() {
+
+    }
+
+    private void searchByProduct() throws IOException {
+        componentType = null;
+        sizeFitmentType = null;
+        boolean decisionMade = false;
+        selectComponentType();
+
+        if(componentType.equals("Rudder Pin") || componentType.equals("Winglet Strut"))
+        {
+            selectSizeFitmentType();
+        }
+
+        System.out.println("You selected " + sizeFitmentType + " " + componentType + "s. Is this correct? (Y/N)");
+
+        do {
+            reader = new Scanner(System.in);
+            String input = reader.nextLine();
+
+            switch (input) {
+                case "Y":
+                    boolean stock = false;
+                    ArrayList<JSONObject> components = ReadFromFile.readAllComponents();
+
+                    if (!components.isEmpty()) {
+                        for (JSONObject component : components) {
+                            String currentComponentType = (String) component.get("componentType");
+                            String currentSizeFitmentType = (String) component.get("sizeFitmentType");
+                            String componentSerialNumber = (String) component.get("serialNumber");
+                            String finish = (String) component.get("finish");
+                            String manufactureDate = (String) component.get("manufactureDate");
+                            String componentBatchNumber = (String) component.get("batchNumber");
+
+                            JSONObject batch = ReadFromFile.readDetailsOfABatch(componentBatchNumber);
+                            String location = (String) batch.get("location");
+
+                            if(currentComponentType.equals(componentType) && currentSizeFitmentType.equals(sizeFitmentType)) {
+                                stock = true;
+                                System.out.println("Component Serial Number: " + componentSerialNumber);
+                                System.out.println("Location: " + location);
+                                System.out.println("Finish: " + finish);
+                                System.out.println("Manufacture Date: " + manufactureDate);
+                                System.out.println();
+                                System.out.println();
+                            }
+                        }
+
+                        if(!stock) {
+                            System.out.println("No stock available");
+                            System.out.println();
+                        }
+                    }
+                    else {
+                        System.out.println("No stock available");
+                        System.out.println();
+                    }
+
+                    decisionMade = true;
+                    componentType = "";
+                    sizeFitmentType = "";
+                    printMenu();
+                    break;
+
+                case "N":
+                    decisionMade = true;
+                    searchByProduct();
+                    break;
+
+                default:
+                    System.out.println("Please enter a valid: 'Y' or 'N'");
+                    break;
+            }
+        } while (!decisionMade);
+
     }
 
     private void allocateStock() throws IOException {
@@ -338,6 +423,7 @@ public class FactorySystem {
                     sizeFitmentType = "";
                     componentSerialNumbers.clear();
                     componentStatusList.clear();
+                    decisionMade = true;
                     retryBatchDetails();
                     break;
 
@@ -395,10 +481,11 @@ public class FactorySystem {
             componentList.add(component);
             componentSerialNumbers.add(componentSerialNumber);
             String componentStatus = "Manufactured-unfinished";
+            String finish = "Unfinished";
             componentStatusList.add(componentSerialNumber + " Manufactured-unfinished");
             WriteToFile.writeComponentNumberToFile(componentSerialNumber);
             WriteToFile.writeComponentToFile(componentSerialNumber, batchNumber, componentType, sizeFitmentType,
-                    getCurrentDateShortenedYear(), componentStatus);
+                    getCurrentDateShortenedYear(), componentStatus, finish, location);
         }
         return componentList;
     }
