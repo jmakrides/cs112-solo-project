@@ -84,8 +84,72 @@ public class FactorySystem {
         while (!finished);
     }
 
-    private void finishComponent() {
+    private void finishComponent() throws IOException {
+        boolean decisionMade = false;
+        JSONArray componentNumbers = ReadFromFile.readComponentNumbers();
 
+        System.out.println("Enter component number:");
+        System.out.println("> ");
+
+        do {
+            reader = new Scanner(System.in);
+            String componentNumber = reader.nextLine();
+
+            if(componentNumbers.contains(componentNumber)) {
+
+                boolean confirmation = false;
+                JSONObject component = ReadFromFile.readDetailsOfAComponent(componentNumber);
+
+                String currentComponentType = (String) component.get("componentType");
+                String currentSizeFitmentType = (String) component.get("sizeFitmentType");
+                String componentBatchNumber = (String) component.get("batchNumber");
+                JSONObject batch = ReadFromFile.readDetailsOfABatch(componentBatchNumber);
+                String location = (String) batch.get("location");
+
+                System.out.println("You selected " + currentSizeFitmentType + " " + currentComponentType + " " + location + " is this correct? (Y/N)");
+
+                do {
+                    reader = new Scanner(System.in);
+                    String input = reader.nextLine();
+
+                    switch (input) {
+                        case "Y":
+                            String currentStatus = (String) component.get("componentStatus");
+                            if(currentStatus.equals("Manufactured-unfinished")) {
+
+                                //TODO ask if polish or paint 
+
+                            } else {
+                                System.out.println("Component already has a finish.");
+                            }
+                            confirmation = true;
+                            printMenu();
+                            break;
+
+                        case "N":
+                            confirmation = true;
+                            finishComponent();
+                            break;
+
+                        default:
+                            System.out.println("Please enter a valid: 'Y' or 'N'");
+                            break;
+                    }
+                } while (!confirmation);
+
+
+
+
+                decisionMade = true;
+                printMenu();
+            }
+            else {
+                System.out.println("Invalid component number.");
+                printMenu();
+                decisionMade = true;
+            }
+
+        } while (!decisionMade);
     }
 
     private void searchByProduct() throws IOException {
