@@ -1,0 +1,18 @@
+{
+  "componentType": "Door Handle",
+  "componentSerialNumbers": [
+    "0207190002-0001",
+    "0207190002-0002",
+    "0207190002-0003"
+  ],
+  "sizeFitmentType": "",
+  "manufactureDate": "02072019",
+  "noOfComponents": 3,
+  "location": "Glasgow",
+  "componentStatus": [
+    "0207190002-0001 Manufactured-unfinished",
+    "0207190002-0002 Manufactured-unfinished",
+    "0207190002-0003 Manufactured-unfinished"
+  ],
+  "batchNumber": "0207190002"
+}

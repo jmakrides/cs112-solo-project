@@ -142,4 +142,18 @@ public class WriteToFile {
             e.printStackTrace();
         }
     }
+
+    public static void allocateStock(String batchNumberToAllocate, String chosenLocation) {
+        File batches = new File("files/batches/" + batchNumberToAllocate + ".json");
+
+        JSONObject batch = ReadFromFile.readDetailsOfABatch(batchNumberToAllocate);
+
+        batch.replace("location", chosenLocation);
+
+        try (FileWriter file = new FileWriter(batches)) {
+            file.write((batch.toJSONString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

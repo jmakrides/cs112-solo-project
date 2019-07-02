@@ -42,7 +42,8 @@ public class FactorySystem {
         System.out.println("2. List all batches");
         System.out.println("3. View details of a batch");
         System.out.println("4. View details of a component");
-        System.out.println("5. Quit");
+        System.out.println("5. Allocate manufactured stock");
+        System.out.println("6. Quit");
 
         System.out.println("> ");
 
@@ -77,6 +78,7 @@ public class FactorySystem {
     }
 
     private void allocateStock() throws IOException {
+
         String chosenLocation = "";
         JSONArray batchNumbers = ReadFromFile.readBatchNumbers();
 
@@ -84,13 +86,13 @@ public class FactorySystem {
         System.out.println("> ");
 
         reader = new Scanner(System.in);
-        String batchNumber = reader.nextLine();
+        String batchNumberToAllocate = reader.nextLine();
 
-        if(batchNumbers.contains(batchNumber)) {
-            JSONObject batch = ReadFromFile.readDetailsOfABatch(batchNumber);
+        if(batchNumbers.contains(batchNumberToAllocate)) {
+            JSONObject batch = ReadFromFile.readDetailsOfABatch(batchNumberToAllocate);
             String location = (String) batch.get("location");
 
-            if(!location.equals("Factory Floor - Warehouse Not Allocated")) {
+            if(location.equals("Factory Floor - Warehouse Not Allocated")) {
                 System.out.println("Select Warehouse (1. Glasgow, 2. Dubai)");
                 System.out.println("Enter the number corresponding to your choice");
                 System.out.println("> ");
@@ -102,9 +104,19 @@ public class FactorySystem {
                     switch (input) {
                         case 1:
                             chosenLocation = "Glasgow";
+                            WriteToFile.allocateStock(batchNumberToAllocate, chosenLocation);
+                            System.out.println("This batch is now allocated and will be shipped to the Glasgow location.");
+                            System.out.println();
+                            System.out.println();
+                            printMenu();
                             break;
                         case 2:
                             chosenLocation = "Dubai";
+                            WriteToFile.allocateStock(batchNumberToAllocate, chosenLocation);
+                            System.out.println("This batch is now allocated and will be shipped to the Dubai location.");
+                            System.out.println();
+                            System.out.println();
+                            printMenu();
                             break;
                         default:
                             System.out.println("Please enter a valid choice, 1 or 2");
@@ -112,8 +124,6 @@ public class FactorySystem {
                     }
                 }
                 while (chosenLocation.equals(""));
-
-
 
             } else {
                 System.out.println("Batch already allocated.");
@@ -177,7 +187,7 @@ public class FactorySystem {
             if(latestBatchNumberDate.equals(dateString)) {
                 long latestBatchNumberAsLong = Long.parseLong(latestBatchNumber);
                 long newBatchNumber = latestBatchNumberAsLong + 1;
-                batchNumber = Long.toString(newBatchNumber);
+                batchNumber = String.format("%010d", newBatchNumber);
             } else {
                 batchNumber = dateString + "0001";
             }
