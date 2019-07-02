@@ -1,1 +1,22 @@
-{"componentType":"Rudder Pin","componentSerialNumbers":["0207190006-0001","0207190006-0002","0207190006-0003","0207190006-0004","0207190006-0005"],"sizeFitmentType":"10mm diameter x 75mm length","manufactureDate":"02072019","noOfComponents":5,"location":"Glasgow","componentStatus":["0207190006-0001 Manufactured-unfinished","0207190006-0002 Manufactured-unfinished","0207190006-0003 Manufactured-unfinished","0207190006-0004 Manufactured-unfinished","0207190006-0005 Manufactured-unfinished"],"batchNumber":"0207190006"}
+{
+  "componentType": "Rudder Pin",
+  "componentSerialNumbers": [
+    "0207190006-0001",
+    "0207190006-0002",
+    "0207190006-0003",
+    "0207190006-0004",
+    "0207190006-0005"
+  ],
+  "sizeFitmentType": "10mm diameter x 75mm length",
+  "manufactureDate": "02072019",
+  "noOfComponents": 5,
+  "location": "Glasgow",
+  "componentStatus": [
+    "0207190006-0001 Manufactured-unfinished",
+    "0207190006-0002 Manufactured-unfinished",
+    "0207190006-0003 Manufactured-unfinished",
+    "0207190006-0004 Manufactured-unfinished",
+    "0207190006-0005 Manufactured-unfinished"
+  ],
+  "batchNumber": "0207190006"
+}

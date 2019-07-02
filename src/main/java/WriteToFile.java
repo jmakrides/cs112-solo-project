@@ -158,4 +158,45 @@ public class WriteToFile {
             e.printStackTrace();
         }
     }
+
+    public static void assignFinishForComponent(String serialNumber, String finish) {
+        File components = new File("files/components/" + serialNumber + ".json");
+
+        JSONObject component = ReadFromFile.readDetailsOfAComponent(serialNumber);
+
+        component.replace("finish", finish);
+        component.replace("componentStatus", "Manufactured-finished");
+
+        String batchNumber = (String) component.get("batchNumber");
+        assignFinishForComponentInsideBatch(batchNumber, serialNumber);
+
+        try (FileWriter file = new FileWriter(components)) {
+            file.write((component.toJSONString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void assignFinishForComponentInsideBatch(String batchNumber, String serialNumber) {
+        File batches = new File("files/batches/" + batchNumber + ".json");
+
+        JSONObject batch = ReadFromFile.readDetailsOfABatch(batchNumber);
+        JSONArray componentStatusList = (JSONArray) batch.get("componentStatus");
+        for (int i = 0; i < componentStatusList.size(); i++) {
+            String componentStatus = (String) componentStatusList.get(i);
+            String currentSerialNumber = componentStatus.substring(0,15);
+            if (currentSerialNumber.equals(serialNumber)) {
+                String newComponentStatus = serialNumber + " Manufactured-finished";
+                componentStatusList.set(i, newComponentStatus);
+                break;
+            }
+        }
+        batch.replace("componentStatus", componentStatusList);
+
+        try (FileWriter file = new FileWriter(batches)) {
+            file.write((batch.toJSONString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

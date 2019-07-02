@@ -1,1 +1,8 @@
-{"componentType":"Rudder Pin","serialNumber":"2506190007-0006","sizeFitmentType":"10mm diameter x 75mm length","manufactureDate":"250619","componentStatus":"Manufactured-unfinished","batchNumber":"2506190007"}
+{
+  "componentType": "Rudder Pin",
+  "serialNumber": "2506190007-0006",
+  "sizeFitmentType": "10mm diameter x 75mm length",
+  "manufactureDate": "250619",
+  "componentStatus": "Manufactured-unfinished",
+  "batchNumber": "2506190007"
+}

@@ -78,78 +78,114 @@ public class FactorySystem {
                     quit();
                     break;
                 default:
-                    System.out.println("Please choose a valid option, 1 - 6");
+                    System.out.println("Please choose a valid menu option, 1 - 8");
             }
         }
         while (!finished);
     }
 
     private void finishComponent() throws IOException {
-        boolean decisionMade = false;
         JSONArray componentNumbers = ReadFromFile.readComponentNumbers();
 
-        System.out.println("Enter component number:");
+        System.out.println("Enter component serial number:");
         System.out.println("> ");
 
-        do {
-            reader = new Scanner(System.in);
-            String componentNumber = reader.nextLine();
+        reader = new Scanner(System.in);
+        String componentNumber = reader.nextLine();
 
-            if(componentNumbers.contains(componentNumber)) {
+        if(componentNumbers.contains(componentNumber)) {
 
-                boolean confirmation = false;
-                JSONObject component = ReadFromFile.readDetailsOfAComponent(componentNumber);
+            boolean confirmation = false;
+            JSONObject component = ReadFromFile.readDetailsOfAComponent(componentNumber);
 
-                String currentComponentType = (String) component.get("componentType");
-                String currentSizeFitmentType = (String) component.get("sizeFitmentType");
-                String componentBatchNumber = (String) component.get("batchNumber");
-                JSONObject batch = ReadFromFile.readDetailsOfABatch(componentBatchNumber);
-                String location = (String) batch.get("location");
+            String currentComponentType = (String) component.get("componentType");
+            String currentSizeFitmentType = (String) component.get("sizeFitmentType");
+            String componentBatchNumber = (String) component.get("batchNumber");
+            JSONObject batch = ReadFromFile.readDetailsOfABatch(componentBatchNumber);
+            String location = (String) batch.get("location");
 
-                System.out.println("You selected " + currentSizeFitmentType + " " + currentComponentType + " " + location + " is this correct? (Y/N)");
+            System.out.println("You selected " + currentSizeFitmentType + " " + currentComponentType + " " + location + " is this correct? (Y/N)");
+            System.out.println("> ");
 
-                do {
-                    reader = new Scanner(System.in);
-                    String input = reader.nextLine();
+            do {
+                reader = new Scanner(System.in);
+                String input = reader.nextLine();
 
-                    switch (input) {
-                        case "Y":
-                            String currentStatus = (String) component.get("componentStatus");
-                            if(currentStatus.equals("Manufactured-unfinished")) {
+                switch (input) {
+                    case "Y":
+                        String currentStatus = (String) component.get("componentStatus");
+                        if(currentStatus.equals("Manufactured-unfinished")) {
+                            boolean finishChosen = false;
+                            System.out.println("Select finish (1. Polished, 2. Painted)");
+                            System.out.println("> ");
 
-                                //TODO ask if polish or paint 
+                            do {
+                                reader = new Scanner(System.in);
+                                String finishInput = reader.nextLine();
 
-                            } else {
-                                System.out.println("Component already has a finish.");
-                            }
-                            confirmation = true;
+                                switch(finishInput) {
+                                    case "1":
+                                        WriteToFile.assignFinishForComponent(componentNumber, "Polished");
+                                        System.out.println("Component number " + componentNumber + " will have a polished finish.");
+                                        System.out.println();
+                                        System.out.println();
+                                        finishChosen = true;
+                                        break;
+                                    case "2":
+                                        System.out.println("Enter paint code (4 characters)");
+                                        System.out.println("> ");
+
+                                        boolean paintCodeCorrect = false;
+                                        do {
+                                            reader = new Scanner(System.in);
+                                            String paintCode = reader.nextLine();
+                                            if(paintCode.length() == 4) {
+                                                String upperCasePaintCode = paintCode.toUpperCase();
+                                                WriteToFile.assignFinishForComponent(componentNumber, upperCasePaintCode);
+                                                paintCodeCorrect = true;
+                                                System.out.println("Component number " + componentNumber + " will be finished in Paint Code " + upperCasePaintCode);
+                                                System.out.println();
+                                                System.out.println();
+                                            } else {
+                                                System.out.println("Please enter a 4 character paint code.");
+                                            }
+                                        } while(!paintCodeCorrect);
+                                        finishChosen = true;
+                                    default:
+                                        System.out.println("Please enter a valid input: 'Y' or 'N'");
+                                        break;
+                                }
+                            } while(!finishChosen);
+
+                        } else {
+                            System.out.println("Component already has a finish.");
+                            System.out.println();
+                            System.out.println();
                             printMenu();
-                            break;
+                        }
+                        confirmation = true;
+                        printMenu();
+                        break;
 
-                        case "N":
-                            confirmation = true;
-                            finishComponent();
-                            break;
+                    case "N":
+                        confirmation = true;
+                        finishComponent();
+                        break;
 
-                        default:
-                            System.out.println("Please enter a valid: 'Y' or 'N'");
-                            break;
-                    }
-                } while (!confirmation);
+                    default:
+                        System.out.println("Please enter a valid: 'Y' or 'N'");
+                        break;
+                }
+            } while (!confirmation);
 
-
-
-
-                decisionMade = true;
-                printMenu();
-            }
-            else {
-                System.out.println("Invalid component number.");
-                printMenu();
-                decisionMade = true;
-            }
-
-        } while (!decisionMade);
+            printMenu();
+        }
+        else {
+            System.out.println("Invalid component number.");
+            System.out.println();
+            System.out.println();
+            printMenu();
+        }
     }
 
     private void searchByProduct() throws IOException {
@@ -276,11 +312,15 @@ public class FactorySystem {
 
             } else {
                 System.out.println("Batch already allocated.");
+                System.out.println();
+                System.out.println();
                 printMenu();
             }
         }
         else {
             System.out.println("Invalid batch number.");
+            System.out.println();
+            System.out.println();
             printMenu();
 
         }
@@ -582,6 +622,7 @@ public class FactorySystem {
                 String componentSizeType = (String) component.get("sizeFitmentType");
                 String manufactureDate = (String) component.get("manufactureDate");
                 String currentStatus = (String) component.get("componentStatus");
+                String finish = (String) component.get("finish");
                 String batchForComponent = (String) component.get("batchNumber");
 
                 System.out.println("Component Details for " + componentNumber);
@@ -589,6 +630,7 @@ public class FactorySystem {
                 System.out.println("Size/Fit: " + componentSizeType);
                 System.out.println("Date of Manufacture: " + manufactureDate);
                 System.out.println("Current Status: " + currentStatus);
+                System.out.println("Finish: " + finish);
                 System.out.println("Part of Batch: " + batchForComponent);
                 System.out.println();
                 decisionMade = true;
