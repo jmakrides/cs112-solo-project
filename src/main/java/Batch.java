@@ -1,6 +1,10 @@
 import java.util.List;
 import java.util.Objects;
 
+//Jack Makrides
+//mib18163
+
+
 public class Batch {
 
     private String batchNo;

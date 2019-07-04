@@ -6,8 +6,15 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.util.ArrayList;
 
+//Jack Makrides
+//mib18163
+
+
 public class ReadFromFile {
 
+    /*
+    Reads the list of batch numbers in the batchnumbers file and returns them.
+     */
     public static JSONArray readBatchNumbers() {
         JSONArray batchNumberList = new JSONArray();
 
@@ -31,6 +38,9 @@ public class ReadFromFile {
         return batchNumberList;
     }
 
+    /*
+    Returns a list of batches to be used by the method that list the details of all batches in the system.
+     */
     public static ArrayList<JSONObject> readAllBatches() {
         ArrayList<JSONObject> batches = new ArrayList<>();
 
@@ -52,6 +62,9 @@ public class ReadFromFile {
         return batches;
     }
 
+    /*
+    Returns all components present in the system. Used for the search by product method.
+     */
     public static ArrayList<JSONObject> readAllComponents() {
         ArrayList<JSONObject> components = new ArrayList<>();
 
@@ -71,6 +84,9 @@ public class ReadFromFile {
         return components;
     }
 
+    /*
+    Returns a batch object based on the batch number that is passed to the method.
+     */
     public static JSONObject readDetailsOfABatch(String batchNumber) {
         JSONObject batch = new JSONObject();
 
@@ -89,6 +105,9 @@ public class ReadFromFile {
         return batch;
     }
 
+    /*
+    Reads the list of component serial numbers in the componentnumbers file and returns them.
+     */
     public static JSONArray readComponentNumbers() {
         JSONArray componentNumberList = new JSONArray();
 
@@ -112,6 +131,9 @@ public class ReadFromFile {
         return componentNumberList;
     }
 
+    /*
+    Returns a component object based on the component serial number that is passed to the method.
+     */
     public static JSONObject readDetailsOfAComponent(String componentNumber) {
         JSONObject component = new JSONObject();
 

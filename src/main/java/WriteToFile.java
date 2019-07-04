@@ -1,19 +1,21 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+//Jack Makrides
+//mib18163
+
+
 public class WriteToFile {
 
+    /*
+    Creates a batch number file in the system to store all batch numbers from created batches. Calls a method to add an
+    empty array if the file is empty
+     */
     public static void createBatchNumberFile() throws IOException {
         File batchnumbers = new File("files/batchnumbers/batchnumbers.json");
 
@@ -22,6 +24,10 @@ public class WriteToFile {
         addBatchNumberArrayToFileIfEmpty();
     }
 
+    /*
+    Creates a component number file in the system to store all component serial numbers from created components. Calls a method to add an
+    empty array if the file is empty
+     */
     public static void createComponentNumberFile() throws IOException {
         File componentnumbers = new File("files/componentnumbers/componentnumbers.json");
 
@@ -30,6 +36,9 @@ public class WriteToFile {
         addComponentNumberArrayToFileIfEmpty();
     }
 
+    /*
+    Adds an empty JSONArray to the batch number file if it is empty
+     */
     public static void addBatchNumberArrayToFileIfEmpty() {
 
         File batchNumberFile = new File("files/batchnumbers/batchnumbers.json");
@@ -49,6 +58,9 @@ public class WriteToFile {
         }
     }
 
+    /*
+    Adds an empty JSONArray to the component number file if it is empty
+     */
     public static void addComponentNumberArrayToFileIfEmpty() {
 
         File componentNumberFile = new File("files/componentnumbers/componentnumbers.json");
@@ -68,6 +80,9 @@ public class WriteToFile {
         }
     }
 
+    /*
+    Appends a new batch number to the list of batch numbers present in the batchnumbers file
+     */
     public static void writeBatchNumberToFile(String batchNo) throws IOException {
         JSONObject batchNumbers = new JSONObject();
 
@@ -83,6 +98,9 @@ public class WriteToFile {
         }
     }
 
+    /*
+    Appends a new component serial number to the list of component serial numbers present in the componentnumbers file
+     */
     public static void writeComponentNumberToFile(String batchNo) throws IOException {
         JSONObject componentNumbers = new JSONObject();
 
@@ -98,6 +116,10 @@ public class WriteToFile {
         }
     }
 
+    /*
+    Creates a new file with the name being the batch number of the batch to be written to file. Then the details of the
+    batch are inserted into this file.
+     */
     public static void writeBatchToFile(String batchNumber, String manufactureDate, int noOfComponents,
                                         String componentType, String sizeFitmentType, String location,
                                         ArrayList<String> componentSerialNumbers, ArrayList<String> componentStatus) throws IOException {
@@ -122,6 +144,10 @@ public class WriteToFile {
         }
     }
 
+    /*
+    Creates a new file with the name being the component serial number of the component to be written to file. Then the details of the
+    component are inserted into this file.
+     */
     public static void writeComponentToFile (String serialNumber, String batchNumber, String componentType,
                                              String sizeFitmentType, String manufactureDate, String componentStatus, String finish, String location) throws IOException {
         File components = new File("files/components/" + serialNumber + ".json");
@@ -145,6 +171,9 @@ public class WriteToFile {
         }
     }
 
+    /*
+    Method used to write the updated location of a batch to the batch details file
+     */
     public static void allocateStock(String batchNumberToAllocate, String chosenLocation) {
         File batches = new File("files/batches/" + batchNumberToAllocate + ".json");
 
@@ -159,6 +188,10 @@ public class WriteToFile {
         }
     }
 
+    /*
+    Method to assign a finish to a component. It replaces the current finish with the new finish and also updates the
+    components status. It then calls another method that updates these values in the relevant batch file.
+     */
     public static void assignFinishForComponent(String serialNumber, String finish) {
         File components = new File("files/components/" + serialNumber + ".json");
 
@@ -177,6 +210,10 @@ public class WriteToFile {
         }
     }
 
+    /*
+    Method called by assignFinishForComponent(). Used to update the component status stored within a batch details file
+    with the new status for that component.
+     */
     public static void assignFinishForComponentInsideBatch(String batchNumber, String serialNumber) {
         File batches = new File("files/batches/" + batchNumber + ".json");
 

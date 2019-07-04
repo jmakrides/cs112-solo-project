@@ -1,5 +1,9 @@
 import java.util.Objects;
 
+//Jack Makrides
+//mib18163
+
+
 public class Component {
 
     private String batchNo;

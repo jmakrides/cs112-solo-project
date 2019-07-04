@@ -9,6 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+//Jack Makrides
+//mib18163
+
 public class FactorySystem {
 
     private Scanner reader;
@@ -25,6 +28,10 @@ public class FactorySystem {
 
     }
 
+    /*
+    Method that is run by main, ensures the "batchnumbers" and "componentnumbers" files are present and set up correctly
+    before printing the welcome mesage and printing the menu
+     */
     public void start() throws IOException {
         WriteToFile.createBatchNumberFile();
         WriteToFile.createComponentNumberFile();
@@ -32,10 +39,16 @@ public class FactorySystem {
         printMenu();
     }
 
+
+    // Prints welcome message to user
     private void printWelcome() {
         System.out.println("Welcome to the GPEC inventory system.");
     }
 
+    /*
+    Method for printing out the systems user menu and then taking the users input and directing the program to the correct
+    method
+     */
     private void printMenu() throws IOException {
         System.out.println("Please choose one of the following options:");
         System.out.println("1. Create a new batch");
@@ -84,6 +97,13 @@ public class FactorySystem {
         while (!finished);
     }
 
+    /*
+    Method for adding a finish to a component. The method first checks to see if the component serial number entered
+    by the user matches any component serial number in the componentnumbers file. If so it then prints out the details
+    of this component and asks the user to confirm whether this is correct or not. Next the system asks the user if they
+    want a polished or painted finish. If they want a polished finish this is applied, if they want a painted finish they
+    are then prompted to enter a 4 character paint code to be applied to the component.
+     */
     private void finishComponent() throws IOException {
         JSONArray componentNumbers = ReadFromFile.readComponentNumbers();
 
@@ -151,8 +171,9 @@ public class FactorySystem {
                                             }
                                         } while(!paintCodeCorrect);
                                         finishChosen = true;
+                                        break;
                                     default:
-                                        System.out.println("Please enter a valid input: 'Y' or 'N'");
+                                        System.out.println("Please enter a valid input: '1' or '2'");
                                         break;
                                 }
                             } while(!finishChosen);
@@ -188,6 +209,12 @@ public class FactorySystem {
         }
     }
 
+    /*
+    This method allows the user to search for available components based on a component type and component size/model.
+    The method reuses the selectComponentType() and selectSizeFitmentType() methods. It then asks the user to confirm if
+    this is what they wish to search for. If there are components matching the users input then the method will print out
+    the details of these components. If not it will notify the user that there is no stock available.
+     */
     private void searchByProduct() throws IOException {
         componentType = null;
         sizeFitmentType = null;
@@ -262,6 +289,11 @@ public class FactorySystem {
 
     }
 
+    /*
+    Method that allows a user to allocate a batch to a chosen location. The method checks that the batch has not already
+    been allocated to a location. If it hasn't, it gives the user the option to allocate the batch to either Glasgow or
+    Dubai.
+     */
     private void allocateStock() throws IOException {
 
         String chosenLocation = "";
@@ -326,7 +358,10 @@ public class FactorySystem {
         }
     }
 
-
+    /*
+    Method used to call sub methods for getting the details of a batch to be created. The selectSizeFitmentType() method
+    is skipped if the component type is "Door Handle", due to the fact that this is a universal fit component.
+     */
     private void getBatchDetails() throws IOException {
         generateBatchNo();
         location = "Factory Floor - Warehouse Not Allocated";
@@ -346,7 +381,11 @@ public class FactorySystem {
         printDetails();
     }
 
-
+    /*
+    This method is nearly identical to the getBatchDetails() method. It differs by not generating a new batch number and
+    not reassigning the default location. This method is used when the user answers no to the question of if the batch
+    details are correct. It allows the user to re-enter the details without generating a new batch number.
+     */
     private void retryBatchDetails() throws IOException {
         System.out.println("Batch Number: " + batchNumber);
 
@@ -364,6 +403,13 @@ public class FactorySystem {
         printDetails();
     }
 
+    /*
+    Method for generating a new unique batch number. This is done by first getting a list of batch numbers from the
+    batchnumbers file. It then check to see if the list is empty therefore it will create a batch number with todays date
+    and "0001". If the list is not empty, it gets the latest batch number from the list and gets the date from it. If this
+    date matches todays date, it will add 1 to the batch number. If it does not match todays date it will create a new batch number
+    with todays date and "0001".
+     */
     private void generateBatchNo() {
 
         String dateString = getCurrentDateShortenedYear();
@@ -385,6 +431,9 @@ public class FactorySystem {
         }
     }
 
+    /*
+    Method for allowing a user to input the number of components they want to produce. This must be between 1 and 9999.
+     */
     private void selectNoComponents() {
         System.out.println("How many components do you want to manufacture (1 to 9999)?");
         System.out.println("> ");
@@ -406,6 +455,9 @@ public class FactorySystem {
 
     }
 
+    /*
+    Method that allows the user to choose which type of component they want to create in the batch.
+     */
     private void selectComponentType() {
         System.out.println("Select component type 1. Winglet Strut, 2. Door Handle, 3. Rudder Pin");
         System.out.println("Enter the number corresponding to your choice");
@@ -434,6 +486,9 @@ public class FactorySystem {
 
     }
 
+    /*
+    Method for letting the user choose the size/fitment type of the component based on which component they chose previously.
+     */
     private void selectSizeFitmentType() {
         if(componentType.equals("Winglet Strut")) {
             System.out.println("Please select your aircraft type: 1. Airbus A320 or 2. Airbus A380");
@@ -485,6 +540,12 @@ public class FactorySystem {
         }
     }
 
+    /*
+    This method allows the user to confirm whether they want to create a batch with the details they inputted or if
+    they would like to change these details. If the user wants to change the details, the retryBatchDetails() method is
+    called. If not, the user is told at what time and date the batch and components have been recorded at. It then calls
+    the createBatch() method followed by the printDetails() method before returning the user to the main menu.
+     */
     private void confirmBatchDetails() throws IOException {
         boolean decisionMade = false;
         if (noOfComponents > 1) {
@@ -539,6 +600,10 @@ public class FactorySystem {
 
     }
 
+    /*
+    Method for printing out the details of the batch that has just been created. The user has the choice to print the
+    details or not print them.
+     */
     private void printDetails() {
         System.out.println("Print batch details? (Y/N)");
         System.out.println("> ");
@@ -574,6 +639,11 @@ public class FactorySystem {
     }
 
 
+    /*
+    Method for creating a list of components. It is also responsible for assinging each component a unique serial number.
+    It creates a list of serial numbers and component statuses to be used when writing a batch to file. It also writes the
+    component serial numbers to a file along with writing each component and it's details to an individual file.
+     */
     private ArrayList<Component> createComponentList() throws IOException {
         DecimalFormat decimalFormat = new DecimalFormat("0000");
         ArrayList<Component> componentList = new ArrayList<>();
@@ -594,6 +664,9 @@ public class FactorySystem {
         return componentList;
     }
 
+    /*
+    Method that writes the batch number to the batchnumbers file and writes the batch details to a file.
+     */
     private void createBatch() throws IOException {
         ArrayList<Component> componentList = createComponentList();
         String manufactureDate = getCurrentDateFullYear();
@@ -604,6 +677,11 @@ public class FactorySystem {
                 componentSerialNumbers, componentStatusList);
     }
 
+    /*
+    This method will print out the details of a component by taking in a serial number from the user. The inputted
+    component number is compared against the list of component serial numbers in the componetnumbers file to check that
+    it exists in the system.
+     */
     private void viewDetailsOfAComponent() throws IOException {
         boolean decisionMade = false;
         JSONArray componentNumbers = ReadFromFile.readComponentNumbers();
@@ -646,6 +724,11 @@ public class FactorySystem {
         } while (!decisionMade);
     }
 
+    /*
+    This method will print out the details of a batch by taking in a batch number from the user. The inputted
+    batch number is compared against the list of batch numbers in the batchnumbers file to check that
+    it exists in the system.
+     */
     private void viewDetailsOfABatch() throws IOException {
         boolean decisionMade = false;
         JSONArray batchNumbers = ReadFromFile.readBatchNumbers();
@@ -693,6 +776,9 @@ public class FactorySystem {
         } while (!decisionMade);
     }
 
+    /*
+    This method prints out some details of all batches that are stored in the system.
+     */
     private void listAllBatches() throws IOException {
         ArrayList<JSONObject> batches = ReadFromFile.readAllBatches();
 
@@ -719,24 +805,36 @@ public class FactorySystem {
         printMenu();
     }
 
+    /*
+    Gets the current date in full year format
+     */
     private String getCurrentDateFullYear() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("ddMMyyyy");
         LocalDate date = LocalDate.now();
         return dtf.format(date);
     }
 
+    /*
+    Gets the current date in shortened year format
+     */
     private String getCurrentDateShortenedYear() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("ddMMyy");
         LocalDate date = LocalDate.now();
         return dtf.format(date);
     }
 
+    /*
+    Get the current time
+     */
     private String getCurrentTime() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HHmm");
         LocalDateTime date = LocalDateTime.now();
         return dtf.format(date);
     }
 
+    /*
+    Used by the main menu to exit the system
+     */
     private void quit() {
         finished = true;
         System.out.println("System Exited");
